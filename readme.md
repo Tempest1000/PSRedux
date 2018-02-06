@@ -146,12 +146,70 @@ In the command line and expect to see the application start. This is achieved th
 ```
 "scripts": {
     "start": "babel-node tools/srcServer.js"
-}
+},
 ```
 
 This script babel-node transpiles the javascript into ES5
 
+Also add prestart in package.json with startMessage.js for startup message
 
+Add .eslintrc in root for ESLint support ... then wireup in package.json with 
+
+"lint": "node_modules/.bin/esw webpack.config.* src tools"
+
+Note: this uses the library eslint-watch ... this specifies path to binary
+
+To run this directly in the console type:
+
+```
+npm run lint
+```
+
+As a side note any of these scripts can be run directly in this manor. For example the prestart could be run directly with
+
+```
+npm run prestart
+```
+
+To print out a start message
+
+If lint works you get a message:
+
+```
+✓ Clean (4:40:07 PM)
+```
+
+To have npm start watching the files automatically for changes add
+
+```
+"lint:watch": "npm run lint -- --watch"
+```
+
+Run with:
+
+```
+npm run lint:watch
+```
+
+While this is running the files are being watched and linted as they are changed
+
+To start our server *and* start linting as part of startup the start script needs to be updated to run multiple tasks
+
+start changes to:
+
+```
+"start": "npm-run-all --parallel open:src lint:watch",
+```
+
+Which runs both open:src (srcServer.js) and lint:watch (linting)
+
+Now running
+
+```
+npm start
+```
+
+Starts all of these actions.
 
 
 

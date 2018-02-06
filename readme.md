@@ -211,5 +211,76 @@ npm start
 
 Starts all of these actions.
 
+To wire up testing add a file index.test.js under source with a test
 
+```
+import expect from 'expect';
+
+describe('Our first test', () => {
+  it('should pass', () => {
+    expect(true).toEqual(true);
+  });
+});
+```
+
+Then add the appropriate wireup in package.json
+
+```
+  "scripts": {
+    "prestart": "babel-node tools/startMessage.js",
+    "start": "npm-run-all --parallel test:watch open:src lint:watch",
+    "open:src": "babel-node tools/srcServer.js",
+    "lint": "node_modules/.bin/esw webpack.config.* src tools",
+    "lint:watch": "npm run lint -- --watch",
+    "test": "mocha --reporter progress tools/testSetup.js \"src/**/*.test.js\"",
+    "test:watch": "npm run test -- --watch"
+  },
+```
+
+To execute just the tests the shortcut is:
+
+```
+npm test
+```
+
+For the sake of comparison these are startup scripts for a real application
+
+```
+  "scripts": {
+    "start": "node server.js",
+    "lint": "node_modules/.bin/esw webpack.config.* src/main/webapp tools",
+    "bundle": "webpack --optimize-minimize --output-public-path ''",
+    "lint:watch": "npm run lint -- --watch",
+    "prodbuild": "webpack --config ./webpack.prod.config.js",
+    "test": "set NODE_ENV=test&& mocha -R nyan prom/test --compilers js:babel-core/register,js:prom/test/css-modules-compiler.js --recursive"
+  }
+```
+
+And in server.js of a real application
+
+```
+var webpack = require('webpack');
+var WebPackDevServer = require('webpack-dev-server');
+var config = require('./webpack.config');
+
+new WebPackDevServer(webpack(config), {
+    publicPath: config.output.publicPath,
+    hot: true,
+    historyApiFallback: true,
+    proxy: {
+        "**": "http://localhost:8080"
+    }
+}).listen(8181, 'localhost', function (err, result) {
+    if (err) {
+        console.log("this is a test..");
+        return console.log(err);
+    }
+
+    console.log('Listening on localhost:8181 for hot reloading....')
+});
+```
+
+Another app uses react-scripts
+
+Stopped here: https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m3&clip=0&mode=live
 

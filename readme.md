@@ -87,9 +87,7 @@ Bundling
 JSX compilation
 ES6 transpilation
 
-### Building Development Environment
-
-Stopped at: https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m2&clip=3&mode=live
+## Building Development Environment
 
 ### Install Node
 
@@ -127,6 +125,31 @@ Add react-hmre to this file ... this wires up hot reloading related code.
 
 Now we need a development server. For this we are going to use express.
 
+### Build Tools
+
+Create a folder named tools at root.
+
+File srcServer.js
+
+Express is a popular an easy to use development server ... configured to use webpack.
+
+### NPM Start
+
+Anyone that uses application can type 
+
+```
+npm start
+```
+
+In the command line and expect to see the application start. This is achieved through adding scripts to the package.json file.
+
+```
+"scripts": {
+    "start": "babel-node tools/srcServer.js"
+}
+```
+
+This script babel-node transpiles the javascript into ES5
 
 
 

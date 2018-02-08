@@ -284,3 +284,85 @@ Another app uses react-scripts
 
 Stopped here: https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m3&clip=0&mode=live
 
+### React in ES6
+
+ES5 with createClass
+
+```
+<div onClick={this.handleClick}></div>
+```
+
+Requires explicit bind with ES6
+
+```
+<div onClick={this.handleClick.bind(this)}></div>
+```
+
+or can be done in the constructor ... author likes this pattern, this is done in application
+
+```
+class Contacts extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+```
+
+Stateless Functional Component 
+
+Use const or let instead of var
+
+The app uses the Class style ... the author prefers the const style
+
+Reason for preferring function
+
+* Removes need for class and extends
+* Don't need ctor
+* Removes need for this keyword
+* Removes need for bind ... this.sayHi.bind(this) becomes {sayHi}
+* Good for dumb presentational components
+
+###### Class style:
+
+* Use when need state
+* refs
+* lifecycle methods
+* child functions
+
+```
+class HelloWorld extends React.Component {
+  ...
+  
+  render() {
+   return jsx
+  }
+};
+```
+
+###### Stateless style (a Stateless functional component style ... ES6 variant shown below with no function keywork)
+
+* Use everywhere else
+
+```
+const HelloWorld = (props) => {
+  ...
+  
+  return (
+   ... jsx ...
+  )
+  
+};
+```
+
+### Container vs Presentation components
+
+* Container components contain little markup, and are the stateful components that feed child components with state via props
+* They pass data and actions down and they know about Redux
+* These are usually stateful
+* Sometimes called Controller View
+
+* Presentation components are dumb components that contain markup, they receive actions and data via props, and usually don't know about Redux
+* These are typically functional components
+* Sometimes called View
+
+

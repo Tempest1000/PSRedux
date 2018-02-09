@@ -365,4 +365,10 @@ const HelloWorld = (props) => {
 * These are typically functional components
 * Sometimes called View
 
+## Application Setup
+
+Create a components folder with a few pages, break into folders under components.
+Create a parent App.js file, everything will pass through this from Router.
+One level up create routes.js, reference App in the Route.
+
 

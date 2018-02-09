@@ -371,4 +371,6 @@ Create a components folder with a few pages, break into folders under components
 Create a parent App.js file, everything will pass through this from Router.
 One level up create routes.js, reference App in the Route.
 
+### Stopped here
 
+https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m4&clip=7&mode=live

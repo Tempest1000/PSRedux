@@ -371,6 +371,56 @@ Create a components folder with a few pages, break into folders under components
 Create a parent App.js file, everything will pass through this from Router.
 One level up create routes.js, reference App in the Route.
 
-### Stopped here
+## Creating first pages
+
+Wire-up of new pages in Routes for routing, and header for navigation. 
+
+## Redux
+
+The store is a like a local client-side database.
+
+Three principals of Redux
+
+* One immutable store
+* Actions trigger changes
+* Reducers update state - a function that accepts a current state and modifies it, returns new state
+
+New concepts for Redux
+
+* Reducers
+* Containers
+* Immutability
+
+### Flux vs Redux
+
+#### Flux
+
+ ->  Action
+ |      |
+ |      V
+ |   Dispatcher
+ |      |
+ |      V
+ |   Store
+ |      |
+ |      V
+ |-- React
+
+#### Redux
+
+ ->  Action
+ |      |
+ |      V
+ |   Store  <--> Reducers
+ |      |
+ |      v
+ |-- React
+
+#### Reducers
+
+Reducers are pure functions, and Redux doesn't need an dispatcher. Multiple reducers update a single store.
+In Flux stores contain state and change logic. In Redux the store and the change logic are separate.
+
+## Stopped here
 
 https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m4&clip=7&mode=live

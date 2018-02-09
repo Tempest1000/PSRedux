@@ -419,8 +419,15 @@ New concepts for Redux
 #### Reducers
 
 Reducers are pure functions, and Redux doesn't need an dispatcher. Multiple reducers update a single store.
+
+In Redux the store passes actions down the the Reducers that you define, this is done by calling a root reducer that you define. Whenever the store changes a top level function is called that triggers a re-render on component.
+
+React components can be connected to the store automatically with the React-Redux library, so you don't need the onChange handlers listening for changes from the store.
+
 In Flux stores contain state and change logic. In Redux the store and the change logic are separate.
+
+Redux avoids complexity of logic between different stores like you have in Flux.
 
 ## Stopped here
 
-https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m4&clip=7&mode=live
+https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m5&clip=5&mode=live

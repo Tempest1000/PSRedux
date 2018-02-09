@@ -428,6 +428,109 @@ In Flux stores contain state and change logic. In Redux the store and the change
 
 Redux avoids complexity of logic between different stores like you have in Flux.
 
+#### Redux Flow
+
+Click on something, this fires an Action 
+
+```
+    // wire-up
+    onClick={this.publish.bind(this,publishDrawerTemplate.id, this.state.publishDTO)}
+
+    // calls
+    publish = (id, DTO) => {
+        this.props.triggerPublish(id, DTO);
+        this.cleanClose();
+    }
+    
+    // defined
+    function mapDispatchToProps(dispatch) {
+     return {
+       closedDrawer: bindActionCreators(closedDrawer, dispatch),
+       triggerPublish: bindActionCreators(publish, dispatch),
+    };
+}
+```
+
+The action creators 1st parameter publish is imported into the PublishDrawer here:
+
+```
+import {closedDrawer, publish} from '../../actions/publishDrawerActions';
+```
+
+Publish actions:
+
+```
+const publish = (id, publishDTO) => {
+    
+    return (dispatch) => {
+        axios.put(system.QD_API_URL + `/questionnaire-templates/${id}/publish`
+        , publishDTO)
+        .then((response) => {
+            return dispatch(publishSuccess(response));
+        })
+        .catch((response) => {
+            return dispatch(publishFailure(response));
+        });
+    };  
+};
+```
+
+Publish success:
+
+```
+const publishSuccess = () => {
+    return (dispatch) => {
+        dispatch(getQuestionnaireTemplateList());
+    };
+};
+```
+
+Which calls another action getQuestionnaireTemplateList in the grid's actions.
+
+This is referenced in a reducer:
+
+```
+function questionnaireTemplateListReducer(state = initialState, action) {
+    switch (action.type) {
+        case types.QUESTIONNAIRE_TEMPLATE_LIST_GET_SUCCESS:
+            return action.list;
+        default:
+            return state;
+    }
+}
+```
+
+Publish Drawer Reducer -- this is called when the action to open a drawer occurs
+
+The tie between the two is the action type.
+
+Action:
+
+```
+return <MenuItem key={index} primaryText="Publish" onClick={this.open}/>;
+```
+
+Fires action, eventually reducer is called:
+
+```
+export default function publishActionDrawerReducer(state = initialState, action) {
+    switch (action.type) {
+        case types.PUBLISH_DRAWER_OPEN:
+            return {
+                ...state,
+                open: true,
+                template: action.template
+            };
+        case types.PUBLISH_DRAWER_CLOSED:
+            return initialState;
+
+        default:
+            return state;
+    }
+}
+```
+
+
 ## Stopped here
 
 https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m5&clip=5&mode=live

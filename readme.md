@@ -675,6 +675,36 @@ function templateReducer(state = initialState, action) {
 
 Difference between state in Flux (mutable) and Redux (immutable).
 
-## Stopped here
+Three core benefits to immutable states.
 
-https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m6&clip=4&mode=live
+###### Clarity
+
+In other applications tracking down who/what changed something can be time consuming
+
+###### Performance
+Large object state comparisons are expensive (and complicated)
+Instead you can do a reference comparison
+
+```javascript
+if (prevStoreState !== storeState) ...
+```
+
+###### Additional Benefits
+
+ * Time-travel debugging
+ * Undo/Redo
+ * Turn off individual actions
+ * Play interactions back
+
+### Useful Tools
+
+ES6 - Object.assign, Spread operator
+ES5 - Lodash merge, extend or NPM's ES5 Object-assign
+Libaries - react-addons-update or Immutable.js (the app uses this)
+
+
+
+
+## Stopped here - what is a reducer
+
+https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m6&clip=6&mode=live

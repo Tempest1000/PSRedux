@@ -530,7 +530,151 @@ export default function publishActionDrawerReducer(state = initialState, action)
 }
 ```
 
+The action triggers a change will ultimately be handled by a reducer.
+
+A reducer is a function that returns new state. A reducer receives the current state in an action and returns a new state.
+
+```javascript
+function appReducer(state = defaultState, action) {
+    switch (action.type) {
+        case RATE_COURSE:
+            // return new state
+    }
+}
+```
+
+The new state updates the store, the React component is notified via React-Redux.
+
+## Actions, Stores, and Reducers
+
+Need to understand immutability before you can start writing reducers.
+
+### Actions
+
+Actions are objects containing a description of an event.
+
+Action creator:
+```
+rateCourse(rating) {
+ return { type: RATE_COURSE, rating: rating }
+}
+```
+
+Action:
+```
+{ type: RATE_COURSE, rating: rating }
+```
+
+The action must have the type property, the rest of the shape is up to the developer (just has to serialize).
+
+### Creating the Redux Store 
+
+This is done in the application's entry point. 
+
+The createStore function is passed to the reducer function.
+
+```javascript
+let store = createStore(reducer);
+```
+
+In Flux the store mixes concerns. In Flux the store contains both the data and the logic for manipulating the data.
+
+In Redux the store just stores the data, the reducer handles the state changes.
+
+The Redux Store API is simple, it can:
+
+```javascript
+store.dispatch(action)
+store.subscribe(listener)
+store.getState()
+replaceReducer(nextReducer) // hot reloading
+```
+
+Note: There is no API for changing data in the store.
+
+### Immutability
+
+A fundamental concept in Redux.
+
+Concern ... if I cannot mutate state, doesn't that mean that no data in the application can change?
+
+Solution ... to change state, return a new object.
+
+What is mutable in JS?
+
+||Immutable||Mutable||
+|Number|Objects|
+|String|Arrays|
+|Boolean|Functions|
+|Undefined||
+|Null||
+
+Example ... traditional app mutating state.
+
+```javascript
+state = {
+    name: "Sample User",
+    role: "Author"
+}
+
+state.role = "Admin";
+return state;
+```
+
+Immutable way of changing state (returning a new object).
+
+```javascript
+state = {
+    name: "Sample User",
+    role: "Author"
+}
+
+return state = {
+    name: "Sample User",
+    role: "Admin"
+}
+```
+
+This is important because Redux depends on immutable state to improve performance.
+
+To make it easier to create copies of objects in Javascript the following is available:
+
+Signature:
+
+```javascript
+Object.assign(target, ...sources)
+```
+
+Example use ES6 object assign:
+
+```javascript
+Object.assign({}, state, {role: "Admin"});
+```
+
+--> Create a new empty object, mix that new object with our existing state, change the role property to admin. This creates a clone of our existing state object but with the role property changed to Admin.
+
+Object assign creates a new object using an existing object as the template.
+
+Note: if you leave our the {} you will just mutate the state of object instead of making a deep copy.
+Note: Babel cannot transpile object assign to ES5, so babel-polyfill is needed. 
+
+Example of this functionality in action in the app: 
+
+```javascript
+function templateReducer(state = initialState, action) {
+    switch (action.type) {
+        case types.ADD_QUESTIONNAIRE_TEMPLATE:
+            return Object.assign({}, state, {
+                    workingQuestionnaire: action.template
+                });
+        default:
+            return state;
+    }
+}
+```
+
+Difference between state in Flux (mutable) and Redux (immutable).
 
 ## Stopped here
 
-https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m5&clip=5&mode=live
+https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m6&clip=4&mode=live

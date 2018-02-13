@@ -835,5 +835,70 @@ export default connect (
 
 Benefits over Flux: no manual unsubscribe, no lifecycle methods required
 
+In a very simple app with only one reducer and one component you would pass all state down, in a more advanced app you would want to pass only state the component is concerned with
+
+```javascript
+// note this is called everytime something in the component changes
+function mapStateToProps(state) {
+    return {
+      appState: state
+    };
+}
+
+//to use in component:
+this.props.appState
+```
+
+A memoize library can be used here (reselect is an example)
+
+Ways to handle map dispatch to props ... determining actions available to component
+
+ ```javascript
+this.props.dispatch(loadCourses()); // manually
+ ```
+ 
+ ```javascript
+ // specific example
+ function mapDispatchToProps(dispatch) {
+     return {
+       loadCourses: () => {
+           dispatch(loadCourses());
+       }
+     };
+ }
+ 
+ // then when in component call with ...
+ this.props.loadCourses();
+ ```
+
+ ```javascript
+  // auto wire-up
+  function mapDispatchToProps(dispatch) {
+     return {
+       actions: bindActionCreators(actions, dispatch) // bindActionCreators
+     };
+ }
+ 
+ // then when in component call with ...
+ this.props.actions.loadCourses();
+```
+
+## A Chat with Redux
+
+- **React**            Hey CourseAction, someone just clicked the "Save Course" button. 
+- **Action**           Thanks React! I will dispatch an action so reducers that care can update the state.
+- **Reducer**          Ah, thanks action. I see you passed me the current state and the action to perform. I'll make a new copy of the state and return it.
+- **Store**            Thanks for updating the state reducer. I'll make sure that all connected components are aware.
+- **React-Redux**      Thanks for the new data Mr. Store. I'll now intelligently determine if I should tell React about this change so that it only has to bother with updating the UI when necessary. 
+
+####### Contrast with Flux
+
+- **React**      Hey CourseAction, someone just clicked the "Save Course" button. 
+- **Action**     Thanks React! I registered an action creator with the dispatcher, so the dispatcher should take care of notifying all the stores that care.
+- **Dispatcher** Let me see who cares about a course being saved. Ah! Looks like CourseStore has registered a callback with me, I let her know.
+- **Store**      Hi dispatcher! Thanks for the update, I'll update my data with the payload you sent. Then I'll emit an event to the React components that care.
+- **React**      New data from the store! I'll update the UI to reflect this. 
+
+
 ### Stopped here:
-https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m7&clip=3&mode=live
+https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m8&clip=0&mode=live

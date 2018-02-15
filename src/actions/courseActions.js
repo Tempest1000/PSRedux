@@ -1,4 +1,5 @@
 // action creator creates actions
 export function createCourse(course) {
-    return { type: 'CREATE_COURSE', course }
+    console.log("In the action creator");
+    return { type: 'CREATE_COURSE', course };
 }

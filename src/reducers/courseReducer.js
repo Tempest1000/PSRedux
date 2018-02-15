@@ -3,6 +3,7 @@
 export default function courseReducer(state = [], action) {
     switch (action.type) {
         case "CREATE_COURSE":
+            console.log("In create course of the course reducer");
             return [...state,
                 Object.assign({}, action.course)
             ];

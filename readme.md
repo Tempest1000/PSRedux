@@ -968,10 +968,72 @@ Instead of:
 export default CoursesPage;
 ```
 
-This is used:
+This is used so component can interact with Redux:
 
 ```javascript
 export default connect(mapStateToProps, mapDispatchToProps)(CoursesPage);
+```
+
+Here connect returns a function, and that function calls a function with the CoursesPage as an argument.
+
+ This could also be written as:
+ 
+ ```javascript
+const connectedStateAndProps = connect(mapStateToProps, mapDispatchToProps);
+export default connectedStateAndProps(CoursesPage);
+```
+
+####### Map State to Props
+
+This function returns the properties we'd like to see exposed on our component.
+So courses in the return would be this.props.courses
+
+The state argument is the state that is in the Redux store. So state.courses is the course data in the Redux store.
+
+This **courses** property is determined by what was added in the reducer in reducers\index.js
+
+Seen here:
+
+```javascript
+const rootReducer = combineReducers({
+    courses
+});
+```
+
+Courses is an alias for courseReducer.
+
+```javascript
+function mapStateToProps(state, ownProps) {
+    return {
+        courses: state.courses
+    };
+}
+```
+
+OwnProps are props that are being attached to this component, this is a reference to the component's own props.
+
+####### Map Dispatch to Props
+
+This determines what actions you want to expose on the component.
+
+If not specified the component automatically gets a dispatch property connected to it.
+
+Call with:
+
+```javascript
+this.props.dispatch()
+``` 
+
+####### What is Dispatch?
+
+Dispatch is a function that allows you to fire off your actions.
+
+To fire off an action you must first reference the action, like courseActions ... with the createCourse action creator
+
+Then in the onClickSave function, and in there you can dispatch your first action
+
+```javascript
+this.props.dispatch(courseActions.createCourse(this.state.course));
 ```
 
 ### Stopped here:

@@ -1036,5 +1036,26 @@ Then in the onClickSave function, and in there you can dispatch your first actio
 this.props.dispatch(courseActions.createCourse(this.state.course));
 ```
 
+Actions are payloads of information that send data from your application to your store. These are sent to the store using **store.dispatch()**
+
+This is one of the four store API call reference earlier:
+
+```javascript
+store.dispatch(action)
+store.subscribe(listener)
+store.getState()
+replaceReducer(nextReducer) // hot reloading
+```
+
+In Flux action creators often trigger the dispatch when invoked, this is **not** the case in Redux, instead the component initiates the dispatch to the store.
+
+The dispatch() function can be accessed directly from the store's API as above, but more than likely you'll use a helper like react-redux's connect() library to call it. 
+
+The store receives the action and passes two arguments to the reducer: the current state tree and the action. 
+
+In this case the root reducer which is configured in initialization of the store is called, and all reducers configured in combineReducers are called.
+
+The new state that is returned by the reducer is saved in the Redux store.
+
 ### Stopped here:
 https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m8&clip=8&mode=live

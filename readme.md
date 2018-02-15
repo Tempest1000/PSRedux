@@ -1,5 +1,10 @@
 ## Dependencies
 
+### Finished Code
+
+https://github.com/diegocasmo/react-redux-react-router-es6
+https://github.com/peterneely/pluralsight-react-redux-react-router-es6
+
 ### Tools
 
 Redux
@@ -930,6 +935,44 @@ type="text"
 onChange={this.onTitleChange.bind(this)}
 value=...
 ```
-`
+
+### Wiring up Redux Store
+
+A root reducer that sits on top of all the reducers is created under reducers in a file named index.js
+
+This file maintains a reference to all of the reducers with import statements, and a combineReducers function from the Redux library. 
+
+A reducer can then be referenced using state.courses from the rootReducer.
+
+Under components a new store directory and configureStore file is the Redux store.
+
+In Redux there is a single store.
+
+In this class there is a function that configures the store. This is called at the application's entry point. 
+
+The function can take an initial state argument, but we won't be using it in this application. 
+
+The store references the root reducer created earlier. 
+
+In the store could add support for hot reloading or add support for the redux dev tools extension in Chrome.
+
+In the application's entry point under src\index.js the store is instanced.
+
+Using Provider from the react-redux library the store is attached to all React container components.
+
+Then to wire up a page to work with Redux the react-redux connect function must be referenced.
+
+Instead of:
+
+```javascript
+export default CoursesPage;
+```
+
+This is used:
+
+```javascript
+export default connect(mapStateToProps, mapDispatchToProps)(CoursesPage);
+```
+
 ### Stopped here:
-https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m8&clip=0&mode=live
+https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m8&clip=8&mode=live

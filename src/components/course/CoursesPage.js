@@ -12,17 +12,14 @@ class CoursesPage extends React.Component {
         this.onClickSave = this.onClickSave.bind(this);
     }
 
-    //console.log("made it here");
-    //console.log("event target: " + event.target.value);
-
     onTitleChange(event) {
         const course = this.state.course;
-        course.title = event.target.value; // the event passed is the title change with the value being the payload
-        this.setState({course: course});
+        course.title = event.target.value;
+        this.setState({course});
     }
 
     onClickSave() {
-        alert("Saving ${this.state.course.title}");
+        alert("Saving " + this.state.course.title);
     }
 
     render() {
@@ -31,18 +28,15 @@ class CoursesPage extends React.Component {
                 <h1>Courses</h1>
                 <h2>Add Course</h2>
                 <input type="text"
-                       onClick={this.onTitleChange}
-                       value={this.state.course.title}
-                />
+                       onChange={this.onTitleChange}
+                       value={this.state.course.title} />
 
                 <input type="submit"
                        value="Save"
-                       onClick={this.onClickSave}
-                />
+                       onClick={this.onClickSave} />
             </div>
         );
     }
-
 }
 
 export default CoursesPage;

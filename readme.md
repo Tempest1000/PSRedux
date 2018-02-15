@@ -899,6 +899,37 @@ this.props.dispatch(loadCourses()); // manually
 - **Store**      Hi dispatcher! Thanks for the update, I'll update my data with the payload you sent. Then I'll emit an event to the React components that care.
 - **React**      New data from the store! I'll update the UI to reflect this. 
 
+## Building Application with Code 
 
+ReactJs gotcha ... the "this" context in our change handler is wrong.
+In the first line "this" context is the caller not the React component. 
+The "this" context is the input (textbox), not the component.
+
+To fix the problem bind to the "this" context in the constructor.
+
+```javascript
+    onTitleChange(event) {
+        const course = this.state.course; // note: "this" here is wrong ... the "this" context here is the caller (form control)
+        course.title = event.target.value; // the event passed is the title change with the value being the payload
+        this.setState({course: course});
+    }
+```
+
+Binding statements for the this context look like this:
+
+```javascript
+this.onTitleChange = this.onTitleChange.bind(this); 
+this.onClickSave = this.onClickSave.bind(this); 
+```
+
+Could also handle this in the render() ... the one downside to this is performance
+
+```javascript
+<input
+type="text"
+onChange={this.onTitleChange.bind(this)}
+value=...
+```
+`
 ### Stopped here:
 https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m8&clip=0&mode=live

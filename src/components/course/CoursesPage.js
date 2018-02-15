@@ -52,6 +52,10 @@ CoursesPage.propTypes = {
     courses: PropTypes.array.isRequired
 };
 
+// This function returns the properties we'd like to see exposed on our component.
+// So courses in the return would be this.props.courses
+// The state argument is the state that is in the Redux store. So state.courses is the course data in the Redux store.
+// This **courses** property is determined by what was added in the reducer in reducers\index.js
 function mapStateToProps(state, ownProps) {
     return {
         courses: state.courses

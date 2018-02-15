@@ -1057,5 +1057,7 @@ In this case the root reducer which is configured in initialization of the store
 
 The new state that is returned by the reducer is saved in the Redux store.
 
+
+
 ### Stopped here:
-https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m8&clip=8&mode=live
+https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m8&clip=9&mode=live

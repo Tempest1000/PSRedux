@@ -1167,7 +1167,15 @@ export function getQuestionnaireHistory(key, name) {
 }
 ```
 
+### Five Parts of a Container
 
+1. The constructor, here we initialize the state of the component and setup our bindings.
+2. Child functions: onTitleChange, onClickSave, courseRow ... these are called by render.
+3. The render function ... would typically call a child component, in CoursesPage this contains markup.
+4. PropTypes ... defines prop types that live on props, wired up in mapStateToProps and mapDispatchToProps.
+5. Finally have Redux connect and related functions mapStateToProps and mapDispatchToProps.
 
 ### Stopped here:
-https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m8&clip=9&mode=live
+https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m8&clip=12&mode=live
+
+Container Structure Review

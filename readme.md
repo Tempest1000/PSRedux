@@ -1176,6 +1176,6 @@ export function getQuestionnaireHistory(key, name) {
 5. Finally have Redux connect and related functions mapStateToProps and mapDispatchToProps.
 
 ### Stopped here:
-https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m8&clip=12&mode=live
+https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m9&clip=0&mode=live
 
-Container Structure Review
+

@@ -30,6 +30,7 @@ class CoursesPage extends React.Component {
     }
 
     render() {
+        console.log("rendering component");
         return (
             <div>
                 <h1>Courses</h1>
@@ -57,6 +58,7 @@ CoursesPage.propTypes = {
 // The state argument is the state that is in the Redux store. So state.courses is the course data in the Redux store.
 // This **courses** property is determined by what was added in the reducer in reducers\index.js
 function mapStateToProps(state, ownProps) {
+    console.log("state changed, mapping state to props");
     return {
         courses: state.courses
     };

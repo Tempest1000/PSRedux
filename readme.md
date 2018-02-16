@@ -1057,6 +1057,14 @@ In this case the root reducer which is configured in initialization of the store
 
 The new state that is returned by the reducer is saved in the Redux store.
 
+####### Order of Operations on Page:
+
+1. In the event handler for onClickSave
+2. In the action creator
+3. In the create course of the course reducer
+4. In the mapping state to props function (state changed)
+5. In the render component
+
 
 
 ### Stopped here:

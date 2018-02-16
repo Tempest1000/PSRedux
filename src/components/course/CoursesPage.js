@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import * as courseActions from '../../actions/courseActions';
+import {bindActionCreators} from 'redux';
 
 class CoursesPage extends React.Component {
     constructor(props, context) {
@@ -21,8 +22,8 @@ class CoursesPage extends React.Component {
     }
 
     onClickSave() {
-        console.log("In event handler for onClickSave");
-        this.props.dispatch(courseActions.createCourse(this.state.course));
+        console.log("In the event handler for onClickSave");
+        this.props.actions.createCourse(this.state.course);
     }
 
     courseRow(course, index) {
@@ -30,7 +31,7 @@ class CoursesPage extends React.Component {
     }
 
     render() {
-        console.log("rendering component");
+        console.log("In the render component");
         return (
             <div>
                 <h1>Courses</h1>
@@ -49,8 +50,8 @@ class CoursesPage extends React.Component {
 }
 
 CoursesPage.propTypes = {
-    dispatch: PropTypes.func.isRequired,
-    courses: PropTypes.array.isRequired
+    courses: PropTypes.array.isRequired,
+    actions: PropTypes.object.isRequired
 };
 
 // This function returns the properties we'd like to see exposed on our component.
@@ -58,10 +59,16 @@ CoursesPage.propTypes = {
 // The state argument is the state that is in the Redux store. So state.courses is the course data in the Redux store.
 // This **courses** property is determined by what was added in the reducer in reducers\index.js
 function mapStateToProps(state, ownProps) {
-    console.log("state changed, mapping state to props");
+    console.log("In the mapping state to props function (state changed)");
     return {
         courses: state.courses
     };
 }
 
-export default connect(mapStateToProps)(CoursesPage);
+function mapDispatchToProps(dispatch) {
+    return {
+        actions: bindActionCreators(courseActions, dispatch)
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CoursesPage);

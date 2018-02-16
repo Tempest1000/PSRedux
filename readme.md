@@ -858,9 +858,13 @@ A memoize library can be used here (reselect is an example)
 
 Ways to handle map dispatch to props ... determining actions available to component
 
+###### Type 1
+
  ```javascript
 this.props.dispatch(loadCourses()); // manually
  ```
+
+###### Type 2
  
  ```javascript
  // specific example
@@ -875,6 +879,8 @@ this.props.dispatch(loadCourses()); // manually
  // then when in component call with ...
  this.props.loadCourses();
  ```
+
+###### Type 3
 
  ```javascript
   // auto wire-up
@@ -1064,6 +1070,102 @@ The new state that is returned by the reducer is saved in the Redux store.
 3. In the create course of the course reducer
 4. In the mapping state to props function (state changed)
 5. In the render component
+
+### Wiring up Map Dispatch to Props
+
+If map dispatch to props is left off connect, then a dispatch function will be automatically injected into the component.
+
+It can then be references directly via props like this:
+
+```javascript
+this.props.dispatch(courseActions.createCourse(this.state.course));
+```
+
+The other way to do this is to add a dispatch of createCourse to props directly so that it can be called like this:
+
+```javascript
+this.props.createCourse(this.state.course);
+```
+
+This is done by adding mapDispatchToProps to the connect function:
+
+```javascript
+export default connect(mapStateToProps, mapDispatchToProps)(CoursesPage);
+```
+
+And then wiring up the function createCourse to dispatch courseActions createCourse to pops in mapDispatchToProps like this:
+
+```javascript
+function mapDispatchToProps(dispatch) {
+    return {
+        createCourse: course => dispatch(courseActions.createCourse(course))
+    };
+}
+```
+
+This is Type 2 shown earlier. 
+
+The more terse syntax is Type 3, which allows actions to be accessed directly from props like this:
+
+```javascript
+this.props.actions.createCourse(this.state.course);
+```
+
+This is done with a call to bindActionCreators, which is a helper function that is part of the Redux library.
+
+It is imported with:
+
+```javascript
+import {bindActionCreators} from 'redux'
+```
+
+Once available it can be called like this: 
+
+```javascript
+function mapDispatchToProps(dispatch) {
+    return {
+        actions: bindActionCreators(courseActions, dispatch)
+    };
+}
+```
+
+Note: once this is wired up, so are any action creator functions added to courseActions. Also note the name of property on props changed from createCourse to actions.
+
+Could also have done this:
+
+```javascript
+function mapDispatchToProps(dispatch) {
+    return {
+        createCourse: bindActionCreators(courseActions.createCourse, dispatch)
+    };
+}
+```
+
+In the app this is handled a little differently ... the pattern is that mapDispatchToProps references the function directly:
+
+```javascript
+function mapDispatchToProps(dispatch) {
+    return {
+        getQuestionnaireHistory: bindActionCreators(getQuestionnaireHistory, dispatch),
+    };
+}
+```
+
+And in the action creator dispatch is called:
+
+```javascript
+export function getQuestionnaireHistory(key, name) {
+    return (dispatch)=>{
+        TemplateApi.getTemplateHistory(key).then((data) =>{
+            dispatch({
+                type: types.QUESTIONNAIRE_HISTORY_GET_SUCCESS, 
+                list: data.collection,
+                name
+            });
+        });
+    };
+}
+```
 
 
 

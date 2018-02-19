@@ -1264,4 +1264,37 @@ render() {
 
 Add new ManageCoursePage with template
 Add /course route in routes.js
+Finished wiring ManageCoursePage and created CourseForm
+Create authors reducer
+Created initialState.js in reducers folder
 
+Initial state looks like this:
+
+```javascript
+export default {
+    authors: [],
+    course: []
+}
+```
+
+Then in reducers instead of having
+
+```javascript
+export default function courseReducer(state = [], action) {
+```
+
+Can have this:
+
+```javascript
+export default function courseReducer(state = initialState.authors, action) {
+```
+
+New reducers need to be added to the root reducer. This is easy to forget.
+
+#### Authors data
+
+The mapStateToProps function is the place to tranform data from API into shape/form needed for components.
+
+Stopped here:
+
+https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m10&clip=7&mode=live

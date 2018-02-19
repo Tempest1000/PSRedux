@@ -9,6 +9,6 @@ export function loadCourses() {
     return function(dispatch) {
         return CourseApi.getAllCourses().then(courses => {
             dispatch(loadCoursesSuccess(courses));
-        })
+        });
     };
 }

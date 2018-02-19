@@ -1262,4 +1262,6 @@ render() {
 
 ## Async writes in Redux
 
+Add new ManageCoursePage with template
+Add /course route in routes.js
 

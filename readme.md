@@ -1175,7 +1175,91 @@ export function getQuestionnaireHistory(key, name) {
 4. PropTypes ... defines prop types that live on props, wired up in mapStateToProps and mapDispatchToProps.
 5. Finally have Redux connect and related functions mapStateToProps and mapDispatchToProps.
 
-### Stopped here:
-https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m9&clip=0&mode=live
+## Async in Redux
+
+Three libraries for handling async calls in javascript from course
+
+* redux-thunk - dan created
+* redux-promise - new and least popular
+* redux-saga
+
+redux-thunk - actions return functions
+redux-saga - uses generators that yield
+
+redux-thunk ... uses dispatch to return function
+
+return AuthorApi.deleteAuthor(id).then(() => {
+    dispatch(deletedAuthor(id));
+})
+
+Add api - mockAuthorApi, mockCourseApi, delay
+
+Add thunk to middleware in configureStore.js
+
+Add thunk to action creator for course
+
+Structure of thunk:
+
+export function loadCourse() {
+    return function(dispatch) {
+        return courseApi.getAllCourses().then(courses => {
+            dispatch(loadCoursesSuccess(courses));
+        }
+    }
+}
+
+loadCoursesSuccess action
+
+export function loadCoursesSuccess(courses) {
+    return { type: types.LOAD_COURSES_SUCCESS, courses };
+}
+
+reducer - simply returns courses as the new state
+
+Example in the App, returning a function with dispatch
+
+const publish = (id, publishDTO) => {
+    
+    return (dispatch) => {
+        axios.put(system.QD_API_URL + `/questionnaire-templates/${id}/publish`
+        , publishDTO)
+        .then((response) => {
+            return dispatch(publishSuccess(response));
+        })
+        .catch((response) => {
+            return dispatch(publishFailure(response));
+        });
+    };  
+};
+
+Fetching the course data when the app loads ...
+
+in the initial app startup in index.js ... after store is configured then action creators are wired up and can be called, call action to load data into store
+
+store.dispatch(loadCourses());
+
+Destructuring/named components?
+
+instead of doing this:
+
+render() {
+  return (
+    ...
+    <CourseList courses={this.props.courses}/>
+  );
+}
+
+can do this, which is used in the app:
+
+render() {
+  const {courses} = this.props;
+
+  return (
+    ...
+    <CourseList courses={courses}/>
+  );
+}
+
+## Async writes in Redux
 
 

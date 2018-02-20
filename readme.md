@@ -1295,6 +1295,126 @@ New reducers need to be added to the root reducer. This is easy to forget.
 
 The mapStateToProps function is the place to tranform data from API into shape/form needed for components.
 
-Stopped here:
+#### Text inputs
 
-https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m10&clip=7&mode=live
+Need to create a change handler so text boxes can be typed in.
+
+```javascript
+  updateCourseState(event) {
+    const field = event.target.name;
+    let course = this.state.course;
+    course[field] = event.target.value;
+    return this.setState({ course: course });
+  }
+```
+
+Then wire-up the binding
+
+```javascript
+this.updateCourseState = this.updateCourseState.bind(this);
+```
+
+And the send the change handler to the CourseForm here: 
+
+```javascript
+  render() {
+      return (
+              <CourseForm
+                  allAuthors={this.props.authors}
+                  onChange={this.updateCourseState}
+```
+
+## Saving data
+
+First need a new action. Note getState function below ... this is for when you need additional state from the redux store.
+
+```javascript
+export function saveCourse(course) {
+    return function(dispatch, getState) {
+        return CourseApi.saveCourse(course).then(savedCourse => {
+            course.id ? dispatch(updateCourseSuccess(savedCourse)) :
+                dispatch(createCourseSuccess(savedCourse));
+            }).catch(error => {
+                throw(error);
+            });
+    };
+}
+```
+
+Then need updates to the reducer ... don't want to do a push here to add a new item to array, this would mutate existing state
+
+```javascript
+        case types.CREATE_COURSES_SUCCESS:
+            return [
+                ...state,
+                Object.assign({}, action.course)
+            ];
+```
+
+### Spread Operator
+
+ES6 spread operator explodes as if all values had been types out.
+
+So if the existing array was this:
+
+[ 1, 2, 3 ]
+
+Then ...state is a new immutable copy of the existing array
+
+return [
+     1, 2, 3,
+     next element - new instance of action.course
+]
+
+```javascript
+  return [
+      ...state,
+      Object.assign({}, action.course)
+  ];
+```
+
+The update reducer is similar, and looks like this. 
+Instead of updating our item in the existing array (which would mutate this array), a new array is created.
+This array is composed of all items that are not the one being updated, plus the new item. 
+
+```javascript
+  return [
+      ...state.filter(course => course.id !== action.course.id),
+      Object.assign({}, action.course)
+  ];
+```
+
+### Wire-up Save Course in Manage Course Page
+
+Add the binding in the constructor
+
+```javascript
+this.saveCourse = this.saveCourse.bind(this);
+```
+
+Add the event wire-up to the CourseForm component reference
+
+```javascript
+    render() {
+        return (
+                <CourseForm
+                    allAuthors={this.props.authors}
+                    onChange={this.updateCourseState}
+                    onSave={this.saveCourse}  // <-- here
+```
+
+Create the event handler
+
+```javascript
+saveCourse(event) {
+    event.preventDefault();
+    this.props.actions.saveCourse(this.state.course);
+}
+```
+
+Add save course button to course page
+
+### Stopped here 
+
+https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m10&clip=12&mode=live
+

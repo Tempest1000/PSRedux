@@ -15,14 +15,34 @@ class ManageCoursePage extends React.Component {
             course: Object.assign({}, this.props.course),
             errors: {}
         };
+
+        this.updateCourseState = this.updateCourseState.bind(this);
+        this.saveCourse = this.saveCourse.bind(this);
+    }
+
+    // this is covered in the Flux course
+    updateCourseState(event) {
+        const field = event.target.name;
+        let course = this.state.course;
+        course[field] = event.target.value;
+        return this.setState({ course: course });
+    }
+
+    // create a function to dispatch the save course action
+    saveCourse(event) {
+        event.preventDefault();
+        this.props.actions.saveCourse(this.state.course);
+        this.context.router.push('/courses');
     }
 
     // why do we need to map to local state here? could we not have uses this.props.course directly?
-    // my guess is that would have sent the store state to the stateless functional component which is a bad practice
+    // my guess is that would have sent the store state to the stateless functional component which is a bad practice??
     render() {
         return (
                 <CourseForm
-                    allAuthors={[]}
+                    allAuthors={this.props.authors}
+                    onChange={this.updateCourseState}
+                    onSave={this.saveCourse}
                     course={this.state.course}
                     errors={this.state.errors}
                 />
@@ -31,7 +51,14 @@ class ManageCoursePage extends React.Component {
 }
 
  ManageCoursePage.propTypes = {
-     course: PropTypes.object.isRequired
+     course: PropTypes.object.isRequired,
+     authors: PropTypes.array.isRequired,
+     actions: PropTypes.object.isRequired
+};
+
+// Pull in the React Router context so router is available on this.context.router
+ManageCoursePage.contextTypes = {
+  router: PropTypes.object
 };
 
 // function getCourseById(courses, id) {
@@ -48,11 +75,16 @@ function mapStateToProps(state, ownProps) {
     //     course = getCourseById(state.courses, courseId);
     // }
 
-    let authors = {id: ''};
+    const authorsFormattedForDropdown = state.authors.map(author => {
+        return {
+          value: author.id,
+          text: author.firstName + ' ' + author.lastName
+        };
+    });
 
     return {
         course: course,
-        authors: authors
+        authors: authorsFormattedForDropdown
     };
 }
 

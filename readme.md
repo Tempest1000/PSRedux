@@ -1418,3 +1418,182 @@ Add save course button to course page
 
 https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m10&clip=12&mode=live
 
+### Using React Router's Context to Redirect
+
+To enable using this.context.router do the following:
+
+```javascript
+// Pull in the React Router context so router is available on this.context.router
+ManageCoursePage.contextTypes = {
+  router: PropTypes.object
+};
+```
+
+Context is a global variable that library authors use, but library consumers should avoid. 
+
+Use this like this:
+
+```javascript
+this.context.router.push('/courses');
+```
+
+### Populating exising course and adding updates
+
+Here we will use map state to props. This is done is in the smart component, ManageCoursePage.
+
+Add parameter ownProps to map state to props, and use this to pull in the id parameter.
+
+### Life cycle methods 
+
+Note that when the course page loads on refresh the page is empty. This is the same issue that occured in the app, at the time the page first loaded map state to props had not executed.
+
+Instead need to use componentWillReceiveProps ... this is called every time props have changed, as well as any time React thinks props have changed.
+
+The parameter nextProps is handled over. 
+
+```javascript
+componentWillReceiveProps(nextProps) {
+    if (this.props.course.id != nextProps.course.id) {
+        // necessary to populate form when existing course is loaded directly.
+        this.setState({course: Object.assign({}, nextProps.course)});
+    }
+}
+```
+
+This may run even if props have not changed.
+
+Populated form via:
+    mapStateToProps
+    componentWillReceiveProps
+    
+## Handling Async Status
+
+Status and errors.
+
+App does not have 
+
+ - Initial load indicator
+ - Feedback on save
+ - API failure information
+ 
+ #### Track and display async status calls
+ 
+ Component that displays moving dots (component by Ryan Florence).
+ 
+ Need to know when ajax calls begin and end. Need new actions file: ajaxStatusActions.
+ 
+ Add code to initialState.js to track number of ajax calls in progress.
+ 
+ In the reducer for ajax calls (which will be called for every action in the system), can check for ajax success like this:
+ 
+ ```javascript
+// remember that every time an action is fired all reducers all called
+// because of this the following code can be used to check to see if that resulted in success
+function actionTypeEndsInSuccess(type) {
+    return type.substring(type.length - 8) == '_SUCCESS';
+}
+
+```
+
+***NOTE: Remember to add reducer to root reducer***
+
+Wiring this into the actions for courses and authors is done like this.
+
+At the beginning of the thunk, dispatch of the begin ajax call.
+
+```javascript
+export function loadAuthors() {
+  return function(dispatch) {
+    dispatch(beginAjaxCall());  // <-- dispatch action here
+    return AuthorApi.getAllAuthors() ...
+```
+
+### Connecting to the Redux Store
+
+We should not connect the Header.js to the Redux store ... it is a dumb presentation component (stateless functional) that is displaying status.
+
+Instead we should connect the container component above it to the store via mapStateToProps. Then we should pass state to Header.js via props.
+
+My thought it that this section in header would be modified to include: 
+
+```javascript
+const Header = () => {
+```
+
+Something that looks like this ... or a boolean flag for ajaxCallsInProgress, true or false.
+
+```javascript
+const Header = ({numAjaxCallsInProgress}) => {
+```
+
+Then in code do something like (assuming boolean). Note, this doesn't work.
+
+```javascript
+{
+    if (ajaxCallsInProgress) {
+        <LoadingDots interval={100} dots={20}/>
+    }
+}
+```
+
+Code needs to start with ajaxCallsInProgress like this:
+
+```javascript
+{
+    ajaxCallsInProgress && <LoadingDots interval={100} dots={20}/>
+}
+```
+
+The container component for Header.js is ./src/components/App.js
+
+This needs to have a mapStateToProps function added, and a constructor added.
+
+```javascript
+function mapStateToProps(state) {
+    return {
+        ajaxCallsInProgress: state.numAjaxCallsInProgress > 0
+    };
+}
+```
+
+Then in the constructor:
+
+```javascript
+    constructor(props, context) {
+        super(props, context);
+
+        this.state = {
+            ajaxCallsInProgress: Object.assign({}, this.props.ajaxCallsInProgress)
+        };
+```
+
+And header reference. I am still confused about when to use this.state vs this.props here.
+
+In the video the author uses this.props
+
+```javascript
+     <Header
+         ajaxCallsInProgress={this.state.ajaxCallsInProgress}
+     />
+```
+
+***Note: don't forget to add reference to connect as this is a connected component now, or mapStateToProps will not be available.
+
+### Using Promises to wait for Thunks
+
+Currently in the ManageCoursePage the saveCourse event fires and immediately redirects the user to the courses page.
+
+The saveCourse function is a thunk and implements promise ... so this.props.actions.saveCourse in the ManageCoursePage can be made to wait by using the then() function.
+
+```javascript
+saveCourse(event) {
+    event.preventDefault();
+    
+    this.props.actions.saveCourse(this.state.course)
+    .then(() => this.redirect());
+}
+
+redirect() {
+    this.context.router.push('/courses');
+}
+```

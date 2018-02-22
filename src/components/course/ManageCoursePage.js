@@ -20,6 +20,13 @@ class ManageCoursePage extends React.Component {
         this.saveCourse = this.saveCourse.bind(this);
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (this.props.course.id != nextProps.course.id) {
+            // necessary to populate form when existing course is loaded directly.
+            this.setState({course: Object.assign({}, nextProps.course)});
+        }
+    }
+
     // this is covered in the Flux course
     updateCourseState(event) {
         const field = event.target.name;
@@ -31,7 +38,12 @@ class ManageCoursePage extends React.Component {
     // create a function to dispatch the save course action
     saveCourse(event) {
         event.preventDefault();
-        this.props.actions.saveCourse(this.state.course);
+
+        this.props.actions.saveCourse(this.state.course)
+            .then(() => this.redirect());
+    }
+
+    redirect() {
         this.context.router.push('/courses');
     }
 
@@ -61,19 +73,20 @@ ManageCoursePage.contextTypes = {
   router: PropTypes.object
 };
 
-// function getCourseById(courses, id) {
-//     const course = courses.filter(course => course.id == id);
-//     if (course) return course[0];
-//     return null;
-// }
+function getCourseById(courses, id) {
+    const course = courses.filter(course => course.id == id);
+    if (course && course.length > 0) return course[0];
+    return null;
+}
 
 // this is also the place to tranform data from API into shape/form needed for components
 function mapStateToProps(state, ownProps) {
-    //const courseId = ownProps.params.id;
+    const courseId = ownProps.params.id; // from the path course/:id
     let course = {id: '', watchHref: '', title: '', authorId: '', length: '', category: ''};
-    // if (courseId && state.courses.length > 0) {
-    //     course = getCourseById(state.courses, courseId);
-    // }
+
+    if (courseId && state.courses.length > 0) {
+        course = getCourseById(state.courses, courseId);
+    }
 
     const authorsFormattedForDropdown = state.authors.map(author => {
         return {

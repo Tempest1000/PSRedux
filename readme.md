@@ -1597,3 +1597,7 @@ redirect() {
     this.context.router.push('/courses');
 }
 ```
+
+## Stopped here
+
+https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m11&clip=6&mode=live

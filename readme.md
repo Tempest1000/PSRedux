@@ -1188,18 +1188,19 @@ redux-saga - uses generators that yield
 
 redux-thunk ... uses dispatch to return function
 
+```javascript
 return AuthorApi.deleteAuthor(id).then(() => {
     dispatch(deletedAuthor(id));
 })
+```
 
 Add api - mockAuthorApi, mockCourseApi, delay
-
 Add thunk to middleware in configureStore.js
-
 Add thunk to action creator for course
 
 Structure of thunk:
 
+```javascript
 export function loadCourse() {
     return function(dispatch) {
         return courseApi.getAllCourses().then(courses => {
@@ -1207,6 +1208,7 @@ export function loadCourse() {
         }
     }
 }
+```
 
 loadCoursesSuccess action
 
@@ -1218,6 +1220,7 @@ reducer - simply returns courses as the new state
 
 Example in the App, returning a function with dispatch
 
+```javascript
 const publish = (id, publishDTO) => {
     
     return (dispatch) => {
@@ -1231,6 +1234,7 @@ const publish = (id, publishDTO) => {
         });
     };  
 };
+```
 
 Fetching the course data when the app loads ...
 
@@ -1238,19 +1242,22 @@ in the initial app startup in index.js ... after store is configured then action
 
 store.dispatch(loadCourses());
 
-Destructuring/named components?
+Destructuring/named components? - author states this is using a named component
 
 instead of doing this:
 
+```javascript
 render() {
   return (
     ...
     <CourseList courses={this.props.courses}/>
   );
 }
+```
 
 can do this, which is used in the app:
 
+```javascript
 render() {
   const {courses} = this.props;
 
@@ -1259,6 +1266,7 @@ render() {
     <CourseList courses={courses}/>
   );
 }
+```
 
 ## Async writes in Redux
 
@@ -1411,12 +1419,7 @@ saveCourse(event) {
     this.props.actions.saveCourse(this.state.course);
 }
 ```
-
 Add save course button to course page
-
-### Stopped here 
-
-https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m10&clip=12&mode=live
 
 ### Using React Router's Context to Redirect
 
@@ -1437,7 +1440,7 @@ Use this like this:
 this.context.router.push('/courses');
 ```
 
-### Populating exising course and adding updates
+### Populating existing course and adding updates
 
 Here we will use map state to props. This is done is in the smart component, ManageCoursePage.
 
@@ -1492,7 +1495,6 @@ App does not have
 function actionTypeEndsInSuccess(type) {
     return type.substring(type.length - 8) == '_SUCCESS';
 }
-
 ```
 
 ***NOTE: Remember to add reducer to root reducer***
@@ -1598,6 +1600,193 @@ redirect() {
 }
 ```
 
-## Stopped here
+## Async writes in Redux
 
-https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m11&clip=6&mode=live
+### When to use State
+
+A big question in React Redux is when to use local state. If the data is fleeting and the rest of the app won't care about it, then you can use local state.
+
+For something in the ManageCoursePage that is only triggered when the data is saving, create local state of saving
+
+```javascript
+this.state = {
+  saving: false
+};
+```
+
+Then in saveCourse(event) setState saving to true.
+
+Set back to false in redirect()
+
+Pass this down to course form as props.
+
+saving={this.state.saving}
+
+Currently input is
+
+disabled={loading}
+value={loading ? 'Saving...' : 'Save' }
+
+Change this to saving:
+
+disabled={saving}
+value={saving ? 'Saving...' : 'Save' }
+
+Make sure to get this in props and prop Types validation:
+
+CourseForm => ({saving})
+
+Adding Save Notification with toastr
+
+Add import in index.js for toastr
+In the redirect add a toast
+toastr.success('Course saved');
+
+### Setting up Error Handling
+
+Currently in the saveCourse method of the mockCourseAPI the title is being rejected if it is not long enough.
+
+Right now when Save is clicked nothing happens, page is stuck.
+
+Instead of handling this in the action the author chooses to handle this in the saveCoursePage.
+
+In the saveCourse(event) method there is the following code:
+
+```javascript
+this.props.actions.saveCourse(this.state.couse)
+  .then(() => this.redirect());
+```
+
+Change this to
+
+```javascript
+this.props.actions.saveCourse(this.state.couse)
+  .then(() => this.redirect())
+  .catch(error => {
+    toastr.error(error);
+    this.setState({saving: false});
+  });
+```
+
+To disable the pre-loader, dispatch an action when the ajax call fails.
+
+export const AJAX_CALL_ERROR = 'AJAX_CALL_ERROR';
+
+Add an ajaxCallError action creator ... then in the ajaxStatusReducer reduce the number of ajax calls if there is an error.
+
+Update thunk to dispatch this action on error.
+
+courseActions.js
+
+... add named import ...
+
+... saveCourse ...
+
+```javascript
+  .catch(error => {
+    dispatch(ajaxCallError(error));  // decrements ajax call count, which decrements pre-loader
+    throw(error);
+  });
+```
+
+## Testing React and Production Builds are next topics
+
+Front end testing libraries
+
+Mocha - most popular
+Jasmine - similiar to Mocha, but author prefers Mocha
+Jest - from Facebook, not as popular - wrapper around Jasmine
+Tape - lean and simple
+AVA - new kid on block
+
+Chai - assertion library
+NPM Expect - author using
+
+Helper library
+React test utils - Facebook, verbose API
+Enzyme - uses JSDOM for in memory DOM, and Cheerio for selectors?
+
+How to name tests? Configured in package.json
+
+fileName.spec.js
+fileName.test.js
+
+Author adds CourseForm.test.js - adds code
+
+## Testing Redux
+
+### Testing Connected Redux Components
+
+The ManageCoursePage is a connected component. To bring it into a test without the overhead of bringing in the provider, change the class definition to add export:
+
+```javascript
+export class ManageCoursePage extends React.Component {
+```
+
+With this done we can use a named import to get our hands on the unconnected component.
+
+The normal import would look like this (this gets the default export - connected component).
+
+```javascript
+import ManageCoursePage from './ManageCoursePage';
+```
+
+This is the named import, which references the unconnected class:
+
+```javascript
+import {ManageCoursePage} from './ManageCoursePage';
+```
+
+### Testing mapStateToProps
+
+Extracting logic out to a separate function. In the case the authorsFormattedForDropdown function.
+
+Author moves this to separate selectors folder.
+
+### Testing Action Creators
+
+See code sample.
+
+### Testing Reducers
+
+Given this input, assert this output.
+
+```javascript
+import expect from 'expect';
+import courseReducer from './courseReducer';
+import * as actions from '../actions/courseActions';
+
+describe('Course Reducer', () => {
+  it('should add course when passed "CREATE_COURSE_SUCCESS"', () => {
+    const initialState = [{title: 'a'}, {title: 'b'}];
+    const newCourse = {title: 'c'};
+    const action = actions.createCourseSuccess(newCourse);
+
+    const newState = courseReducer(initialState, action);
+    expect(newState.length).toEqual(3);
+    expect(newState[0].title).toEqual('a');
+    expect(newState[1].title).toEqual('b');
+    expect(newState[2].title).toEqual('c');
+  });
+
+  it('should update course when passed "UPDATE_COURSE_SUCCESS"', () => {
+    const initialState = [{id: 'a', title: 'a'}, {id: 'b', title: 'b'}, {id: 'c', title: 'c'}];
+    const course = {id:'b', title: 'new title'};
+    const action = actions.updateCourseSuccess(course);
+
+    const newState = courseReducer(initialState, action);
+    const updateCourse = newState.find(a => a.id === course.id);
+    const untouchedCourse = newState.find(a => a.id === 'a');
+
+    expect(updateCourse.title).toEqual('new title');
+    expect(untouchedCourse.title).toEqual('a');
+    expect(newState.length).toEqual(3);
+  });
+});
+```
+
+### Testing Reducers
+
+Stopped here:
+
+https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m13&clip=5&mode=live

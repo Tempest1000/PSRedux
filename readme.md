@@ -1824,6 +1824,23 @@ describe('Store', () => {
 });
 ```
 
+## Production Builds
+
+The size of bundle.js is very large in dev: 4.8 MB.
+
 Stopped here:
 
-https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m13&clip=5&mode=live
+https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=cory-house&name=react-redux-react-router-es6-m14&clip=0&mode=live
+
+## Challenges:
+
+1.  Author adminstration
+     * Shouldn't be able to delete an author that already has a course
+2.  Hide empty course list
+4.  Message the user if they try to leave the course form with unsaved changes
+5.  Add client-side validation to the course form
+6.  Handle 404's - manage course page, would need to add logic in mapStateToProps
+7.  Show the number of courses in the Header (should be trivial)
+8.  Pagination
+9.  Sort course table - would be done in mapStateToProps
+10. Keep old values for course data so you can revert changes when user navigates to a different page without saving.

@@ -70,6 +70,11 @@ class ManageCoursePage extends React.Component {
 
     // why do we need to map to local state here? could we not have uses this.props.course directly?
     // my guess is that would have sent the store state to the stateless functional component which is a bad practice??
+    //
+    // UPDATE: now understanding more about the purpose of local state vs props ... props are read-only and cannot be manipulated
+    // any changes to authors would occur in the manage authors page, so authors could be props
+    //
+    // A course can change here, either being updated or having a new course added ... this is why a course must be in local state
     render() {
         return (
                 <CourseForm

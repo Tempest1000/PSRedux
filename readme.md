@@ -1834,7 +1834,7 @@ https://app.pluralsight.com/player?course=react-redux-react-router-es6&author=co
 
 ## Challenges:
 
-1.  Author adminstration
+1.  Author administration
      * Shouldn't be able to delete an author that already has a course
 2.  Hide empty course list
 4.  Message the user if they try to leave the course form with unsaved changes

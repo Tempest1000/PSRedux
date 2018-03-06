@@ -22,6 +22,13 @@ export default function courseReducer(state = initialState.courses, action) {
                 ...state.filter(course => course.id !== action.course.id),
                 Object.assign({}, action.course)
             ];
+        case types.DELETE_COURSE_SUCCESS:
+            console.log("the id to exclude: '" + action.id + "'");
+            let arr = [
+                ...state.filter(course => course.id !== action.id)
+            ];
+            console.log(arr);
+            return arr;
         default:
             return state;
     }

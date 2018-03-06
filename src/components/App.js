@@ -9,6 +9,8 @@ class App extends React.Component {
             <div className="container-fluid">
                 <Header
                     loading={this.props.loading}
+                    coursesCount={this.props.coursesCount}
+                    authorsCount={this.props.authorsCount}
                 />
                 {this.props.children}
             </div>
@@ -18,13 +20,17 @@ class App extends React.Component {
 
 App.propTypes = {
     children: PropTypes.object.isRequired,
-    loading: PropTypes.bool.isRequired
+    loading: PropTypes.bool.isRequired,
+    coursesCount: PropTypes.number.isRequired,
+    authorsCount: PropTypes.number.isRequired,
 };
 
 function mapStateToProps(state) {
     console.log("numAjaxCallsInProgress: " + state.numAjaxCallsInProgress);
     return {
-        loading: state.numAjaxCallsInProgress > 0
+        loading: state.numAjaxCallsInProgress > 0,
+        coursesCount: state.courses.length,
+        authorsCount: state.authors.length
     };
 }
 

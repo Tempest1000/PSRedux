@@ -6,7 +6,7 @@ import React, {PropTypes} from 'react';
 import TextInput from '../common/TextInput';
 import SelectInput from '../common/SelectInput';
 
-// author calls this destructing ... so don't have to use this.props.course?
+// author calls this destructuring ... so don't have to use this.props.course?
 const CourseForm = ({course, allAuthors, onSave, onChange, saving, errors}) => {
     return(
         <form>

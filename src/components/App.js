@@ -22,7 +22,7 @@ App.propTypes = {
     children: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,
     coursesCount: PropTypes.number.isRequired,
-    authorsCount: PropTypes.number.isRequired,
+    authorsCount: PropTypes.number.isRequired
 };
 
 function mapStateToProps(state) {

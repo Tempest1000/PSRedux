@@ -11,6 +11,7 @@ import './styles/styles.css'; //Webpack can import CSS files too!
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { loadAuthors } from './actions/authorActions';
 import { loadCourses } from './actions/courseActions';
+import { loadProducts } from './actions/productActions';
 import '../node_modules/toastr/build/toastr.min.css';
 
 // create an instance of the redux store
@@ -20,6 +21,7 @@ const store = configureStore();
 
 store.dispatch(loadAuthors());
 store.dispatch(loadCourses());
+store.dispatch(loadProducts());
 
 // Provider is higher order component that attaches our store to our React container components
 

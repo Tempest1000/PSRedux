@@ -7,6 +7,7 @@ import CoursesPage from './components/course/CoursesPage.js';
 import ManageCoursePage from './components/course/ManageCoursePage.js';
 import AuthorsPage from './components/author/AuthorsPage.js';
 import ManageAuthorPage from "./components/author/ManageAuthorPage";
+import ProductsPage from './components/product/ProductsPage.js';
 
 export default (
   <Route path="/" component={App}>
@@ -17,6 +18,7 @@ export default (
       <Route path="authors" component={AuthorsPage} />
       <Route path="author" component={ManageAuthorPage} />
       <Route path="author/:id" component={ManageAuthorPage} />
+      <Route path="products" component={ProductsPage} />
       <Route path="about" component={AboutPage} />
   </Route>
 );
